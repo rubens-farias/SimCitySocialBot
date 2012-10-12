@@ -45,11 +45,11 @@ namespace Inspired.ClickThrough.Business
 
         private readonly Template[] templates = new[]
         {
-            new Template{ Name = "Close"    , Color = Color.Blue   , Priority = Priority.Highest, Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Close.jpg"    ), Offset = new Point(10, 10)},
-            new Template{ Name = "Ok"       , Color = Color.Green  , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Ok.jpg"       ), Offset = new Point(10, 10)},
-            new Template{ Name = "BioHazard", Color = Color.Red    , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\BioHazard.jpg"), Offset = new Point(10, 10)},
-            new Template{ Name = "Coin"     , Color = Color.Yellow , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Coin.jpg"     ), Offset = new Point(10, 10)},
-            new Template{ Name = "Material" , Color = Color.Brown  , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Material.jpg" ), Offset = new Point(10, 10)}
+            new Template{ Name = "Close"    , Cost = 0, Color = Color.Blue   , Priority = Priority.Highest, Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Close.jpg"    ), Offset = new Point(10, 10)},
+            new Template{ Name = "Ok"       , Cost = 0, Color = Color.Green  , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Ok.jpg"       ), Offset = new Point(10, 10)},
+            new Template{ Name = "BioHazard", Cost = 1, Color = Color.Red    , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\BioHazard.jpg"), Offset = new Point(10, 10)},
+            new Template{ Name = "Coin"     , Cost = 1, Color = Color.Yellow , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Coin.jpg"     ), Offset = new Point(10, 10)},
+            new Template{ Name = "Material" , Cost = 1, Color = Color.Brown  , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Material.jpg" ), Offset = new Point(10, 10)}
         };
         
         public void Start()
@@ -60,12 +60,12 @@ namespace Inspired.ClickThrough.Business
             //current = new Bitmap(@"C:\Users\Rubens\Desktop\levelUp.png");
 
             detectWorker.DoWork += Detect;
-            //executeWorker.DoWork += Execute;
-            //addClicksWorker.DoWork += AddClicks;
+            executeWorker.DoWork += Execute;
+            addClicksWorker.DoWork += AddClicks;
 
             detectWorker.RunWorkerAsync();
-            //executeWorker.RunWorkerAsync();
-            //addClicksWorker.RunWorkerAsync();
+            executeWorker.RunWorkerAsync();
+            addClicksWorker.RunWorkerAsync();
         }
 
         private void Detect(object sender, DoWorkEventArgs e)
@@ -118,11 +118,11 @@ namespace Inspired.ClickThrough.Business
 
                             Task task = new Task
                             {
-                                Priority = template.Priority,
-                                Location = TranslateScreenCoordinates(target),
+                                Priority    = template.Priority,
+                                Location    = TranslateScreenCoordinates(target),
                                 MouseEvents = new[] { Mouse.MouseEvent.LeftDown, Mouse.MouseEvent.LeftUp },
-                                RewardType = (RewardType)Enum.Parse(typeof(RewardType), template.Name),
-                                Cost = template.Name == "Close" ? 0 : 1
+                                RewardType  = (RewardType)Enum.Parse(typeof(RewardType), template.Name),
+                                Cost        = template.Cost
                             };
 
                             lock (locker)
