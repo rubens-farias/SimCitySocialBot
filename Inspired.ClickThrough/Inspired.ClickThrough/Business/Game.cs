@@ -45,10 +45,11 @@ namespace Inspired.ClickThrough.Business
 
         private readonly Template[] templates = new[]
         {
-            new Template{ Name = "Close"    , Color = Color.Blue   , Priority = Priority.Highest, Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Close.jpg"    ), Offset = new Point(15, 15)},
-            new Template{ Name = "Coin"     , Color = Color.Yellow , Priority = Priority.Medium , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Coin.jpg"     ), Offset = new Point(15, 15)},
-            new Template{ Name = "Material" , Color = Color.Brown  , Priority = Priority.Medium , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Material.jpg" ), Offset = new Point(15, 15)},
-            new Template{ Name = "BioHazard", Color = Color.Red    , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\BioHazard.jpg"), Offset = new Point(15, 15)}
+            new Template{ Name = "Close"    , Color = Color.Blue   , Priority = Priority.Highest, Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Close.jpg"    ), Offset = new Point(10, 10)},
+            new Template{ Name = "Ok"       , Color = Color.Green  , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Ok.jpg"       ), Offset = new Point(10, 10)},
+            new Template{ Name = "BioHazard", Color = Color.Red    , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\BioHazard.jpg"), Offset = new Point(10, 10)},
+            new Template{ Name = "Coin"     , Color = Color.Yellow , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Coin.jpg"     ), Offset = new Point(10, 10)},
+            new Template{ Name = "Material" , Color = Color.Brown  , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Material.jpg" ), Offset = new Point(10, 10)}
         };
         
         public void Start()
@@ -56,14 +57,15 @@ namespace Inspired.ClickThrough.Business
             clicks = 0;
             bounds = Screen.AllScreens[this.Monitor].Bounds;
             current = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format24bppRgb);
+            //current = new Bitmap(@"C:\Users\Rubens\Desktop\levelUp.png");
 
             detectWorker.DoWork += Detect;
-            executeWorker.DoWork += Execute;
-            addClicksWorker.DoWork += AddClicks;
+            //executeWorker.DoWork += Execute;
+            //addClicksWorker.DoWork += AddClicks;
 
             detectWorker.RunWorkerAsync();
-            executeWorker.RunWorkerAsync();
-            addClicksWorker.RunWorkerAsync();
+            //executeWorker.RunWorkerAsync();
+            //addClicksWorker.RunWorkerAsync();
         }
 
         private void Detect(object sender, DoWorkEventArgs e)
@@ -79,25 +81,35 @@ namespace Inspired.ClickThrough.Business
                         tasks.Clear();
                     }
 
-                    BlobCounter buttons = new BlobCounter { FilterBlobs = true, MinWidth = 150, MinHeight = 40, MaxWidth = 150, MaxHeight = 42 };
+                    BlobCounter actions = new BlobCounter { FilterBlobs = true, MinWidth =  31, MinHeight = 31, MaxWidth =  42, MaxHeight = 42 };
+                    BlobCounter buttons = new BlobCounter { FilterBlobs = true, MinWidth = 140, MinHeight = 40, MaxWidth = 160, MaxHeight = 50 };
 
-                    BlobCounter collect = new BlobCounter { FilterBlobs = true, MinWidth = 31, MinHeight = 31, MaxWidth = 42, MaxHeight = 42 };
-                    //keepYellowOnly.ApplyInPlace(current);
-                    //extractor.ProcessImage(current);
-                    collect.ProcessImage(keepYellowOnly.Apply(current));
+                    //int i = 0;
+                    ////keepYellowOnly.ApplyInPlace(current);
+                    //buttons.ProcessImage(keepYellowOnly.Apply(current));
+                    //foreach (Blob blob in buttons.GetObjectsInformation())
+                    //{
+                    //    using (Bitmap icon = new Bitmap(blob.Rectangle.Width, blob.Rectangle.Height))
+                    //    using (Graphics g1 = Graphics.FromImage(icon))
+                    //    {
+                    //        icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
 
-                    foreach (Blob blob in collect.GetObjectsInformation())
+                    //        g1.DrawImage(current, 0, 0, blob.Rectangle, GraphicsUnit.Pixel);
+                    //        icon.Save(String.Format(@"C:\Users\Rubens\Desktop\{0}.jpg", ++i), ImageFormat.Jpeg);
+                    //    }
+                    //    g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Yellow)), blob.Rectangle);
+                    //}
+                    //current.Save(@"C:\Users\Rubens\Desktop\levelUpXXX.png");
+
+                    Bitmap yellowOnly = keepYellowOnly.Apply(current);
+                    actions.ProcessImage(yellowOnly);
+                    buttons.ProcessImage(yellowOnly);
+
+                    IEnumerable<Blob> blobs = actions.GetObjectsInformation().Concat(
+                                              buttons.GetObjectsInformation());
+                    foreach (Blob blob in blobs)
                     {
-                        //using (Bitmap icon = new Bitmap(blob.Rectangle.Width, blob.Rectangle.Height))
-                        //using (Graphics g1 = Graphics.FromImage(icon))
-                        //{
-                        //    icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
-
-                        //    g1.DrawImage(current,0,0, blob.Rectangle, GraphicsUnit.Pixel);
-                        //    icon.Save(String.Format(@"C:\Users\Rubens\Desktop\simcity\{0}.jpg", ++i), ImageFormat.Jpeg);
-                        //}
-
-                        foreach (var template in templates)
+                        foreach (var template in templates.Where(t => t.Icon.Height <= blob.Rectangle.Height && t.Icon.Width <= blob.Rectangle.Width))
                         foreach (var match in exhaustive.ProcessImage(current, template.Icon, blob.Rectangle))
                         {
                             Rectangle target = CalculateOffset(match.Rectangle, template.Offset);
