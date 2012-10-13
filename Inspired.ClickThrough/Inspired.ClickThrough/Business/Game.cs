@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AForge;
+using AForge.Imaging;
+using AForge.Imaging.Filters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -7,9 +10,6 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using AForge;
-using AForge.Imaging;
-using AForge.Imaging.Filters;
 using Image = System.Drawing.Image;
 using Point = System.Drawing.Point;
 
@@ -45,12 +45,15 @@ namespace Inspired.ClickThrough.Business
 
         private readonly Template[] templates = new[]
         {
-            new Template{ Name = "Close"    , Cost = 0, Color = Color.Blue   , Priority = Priority.Highest, Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Close.jpg"    ), Offset = new Point(10, 10)},
-            new Template{ Name = "Ok"       , Cost = 0, Color = Color.Green  , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Ok.jpg"       ), Offset = new Point(10, 10)},
-            new Template{ Name = "BioHazard", Cost = 1, Color = Color.Red    , Priority = Priority.High   , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\BioHazard.jpg"), Offset = new Point(10, 10)},
-            new Template{ Name = "Coin"     , Cost = 1, Color = Color.Yellow , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Coin.jpg"     ), Offset = new Point(10, 10)},
-            new Template{ Name = "Material" , Cost = 1, Color = Color.Brown  , Priority = Priority.Low    , Icon = (Bitmap)Bitmap.FromFile(@"..\..\Resources\SimCitySocial\Material.jpg" ), Offset = new Point(10, 10)}
+            Template.Create("Close"    , 0, Color.Blue   , Priority.Highest, true ),
+            Template.Create("Ok"       , 0, Color.Green  , Priority.High   , false),
+            Template.Create("BioHazard", 1, Color.Red    , Priority.High   , true ),
+            Template.Create("Coin"     , 1, Color.Yellow , Priority.Low    , true ),
+            Template.Create("Material" , 1, Color.Brown  , Priority.Low    , true )
         };
+
+        public delegate void LogHandler(string message);
+        public event LogHandler Log;
         
         public void Start()
         {
@@ -93,7 +96,6 @@ namespace Inspired.ClickThrough.Business
                     //    using (Graphics g1 = Graphics.FromImage(icon))
                     //    {
                     //        icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
-
                     //        g1.DrawImage(current, 0, 0, blob.Rectangle, GraphicsUnit.Pixel);
                     //        icon.Save(String.Format(@"C:\Users\Rubens\Desktop\{0}.jpg", ++i), ImageFormat.Jpeg);
                     //    }
@@ -115,6 +117,9 @@ namespace Inspired.ClickThrough.Business
                             Rectangle target = CalculateOffset(match.Rectangle, template.Offset);
                             g.FillRectangle(new SolidBrush(Color.FromArgb(128, template.Color)), match.Rectangle);
                             g.FillRectangle(Brushes.HotPink, target);   // click point
+
+                            if (!template.AutoClick)
+                                continue;   // Auto level up?
 
                             Task task = new Task
                             {
@@ -148,14 +153,15 @@ namespace Inspired.ClickThrough.Business
                 Task task;
                 lock (locker)
                 {
-                    //// se tiver tarefa de custo != 0, nao tiver tarefas OU nao tiver clicks, aguarde
-                    //while ((tasks.Count == 0 || clicks == 0) && tasks.FirstOrDefault(t => t.Cost == 0) == null)
-
-                    // enquanto não houver tarefas, ou o saldo de clicks for insuficiente
+                    // while no new tasks, or not enough clicks
                     while(tasks.Count == 0 || tasks.OrderByDescending(t => (int)t.Priority).First().Cost > clicks)
                         System.Threading.Monitor.Wait(locker);
+
                     tasks.Remove(task = tasks.OrderByDescending(t => (int)t.Priority).First());
                 }
+
+                if (Log != null)
+                    Log(String.Format("{0:MMM dd, HH:mm:ss} {1} {2}", DateTime.Now, task.Location, task.RewardType));
 
                 Mouse.Click(task.Location, task.MouseEvents);
 

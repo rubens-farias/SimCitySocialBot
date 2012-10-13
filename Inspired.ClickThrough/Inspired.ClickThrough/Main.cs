@@ -22,6 +22,10 @@ namespace Inspired.ClickThrough
                 Spawn = TimeSpan.FromMinutes(3),
                 Interval = TimeSpan.FromSeconds(5),
             };
+            game.Log += message => {
+                if (this.log.InvokeRequired)
+                    this.Invoke(new MethodInvoker(delegate { this.log.Text = message + Environment.NewLine + this.log.Text; }));
+            };
             game.Start();
         }
 
