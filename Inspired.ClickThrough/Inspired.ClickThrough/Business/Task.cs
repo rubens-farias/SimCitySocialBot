@@ -9,6 +9,7 @@ namespace Inspired.ClickThrough.Business
         public Priority Priority                { get; set; }
         public RewardType RewardType            { get; set; }
         public Point Location                   { get; set; }
+        public DateTime LastClick               { get; set; }
         public Mouse.MouseEvent[] MouseEvents   { get; set; }
     }
 }

@@ -90,12 +90,19 @@
   <ItemGroup>
     <Content Include="References\AForge.dll" />
     <Content Include="References\AForge.Imaging.dll" />
+    <Content Include="Resources\SimCitySocial\Fire.jpg" />
+    <Content Include="Resources\SimCitySocial\Quarentined.jpg" />
+    <Content Include="Resources\SimCitySocial\Unfinished.jpg" />
+    <Content Include="Resources\SimCitySocial\Corn.jpg" />
+    <Content Include="Resources\SimCitySocial\Student1.jpg" />
     <Content Include="Resources\SimCitySocial\Ok.jpg" />
     <Content Include="Resources\SimCitySocial\BioHazard.jpg" />
     <Content Include="Resources\SimCitySocial\Bolt.jpg" />
     <Content Include="Resources\SimCitySocial\Close.jpg" />
     <Content Include="Resources\SimCitySocial\Coin.jpg" />
     <Content Include="Resources\SimCitySocial\Material.jpg" />
+    <Content Include="Resources\SimCitySocial\Student2.jpg" />
+    <Content Include="Resources\SimCitySocial\Waiting.jpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
