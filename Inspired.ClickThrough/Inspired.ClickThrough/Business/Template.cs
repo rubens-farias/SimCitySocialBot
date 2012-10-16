@@ -22,7 +22,7 @@ namespace Inspired.ClickThrough.Business
                 Color     = color,
                 Priority  = priority,
                 AutoClick = autoClick,
-                Offset    = new Point(10, 10),
+                Offset    = new Point(12, 12),
                 Icon      = (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\" + name + ".jpg")
             };
         }

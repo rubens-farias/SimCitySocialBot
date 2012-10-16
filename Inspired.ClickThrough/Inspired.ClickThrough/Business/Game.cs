@@ -4,6 +4,7 @@ using AForge.Imaging.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -33,8 +34,7 @@ namespace Inspired.ClickThrough.Business
         private Bitmap current;
         private Rectangle bounds;
         private readonly List<Task> tasks = new List<Task>();
-        private Dictionary<Point, DateTime> tracker = new Dictionary<Point, DateTime>();
-        private readonly ExhaustiveTemplateMatching exhaustive = new ExhaustiveTemplateMatching(0.8f);
+        private readonly Dictionary<Point, DateTime> tracker = new Dictionary<Point, DateTime>();
         private readonly ColorFiltering keepYellowOnly = new ColorFiltering
         {
             Red   = new IntRange( 255,  255),
@@ -47,12 +47,28 @@ namespace Inspired.ClickThrough.Business
         private readonly Template[] templates = new[]
         {
             Template.Create("Close"    , 0, Color.Blue   , Priority.Highest, true ),
-            Template.Create("Ok"       , 0, Color.Green  , Priority.High   , false),
+            Template.Create("Refresh"  , 0, Color.Blue   , Priority.Highest, true ),
+            Template.Create("Maximize" , 0, Color.Blue   , Priority.Highest, true ),
+            Template.Create("Ok"       , 0, Color.Blue   , Priority.High   , false),
             Template.Create("Student1" , 1, Color.Yellow , Priority.High   , true ),
             Template.Create("Student2" , 1, Color.Yellow , Priority.High   , true ),
             Template.Create("BioHazard", 1, Color.Red    , Priority.Medium , true ),
             Template.Create("Coin"     , 1, Color.Yellow , Priority.Low    , true ),
             Template.Create("Material" , 1, Color.Brown  , Priority.Low    , true )
+        };
+
+        private readonly Dictionary<string, Bitmap> numbers = new Dictionary<string, Bitmap>
+        {
+            { "0", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\0.jpg") },
+            { "1", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\1.jpg") },
+            { "2", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\2.jpg") },
+            { "3", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\3.jpg") },
+            { "4", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\4.jpg") },
+            { "5", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\5.jpg") },
+            { "6", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\6.jpg") },
+            { "7", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\7.jpg") },
+            { "8", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\8.jpg") },
+            { "9", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\9.jpg") }
         };
 
         public delegate void LogHandler(string message);
@@ -64,7 +80,7 @@ namespace Inspired.ClickThrough.Business
             bounds = Screen.AllScreens[this.Monitor].Bounds;
             current = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format24bppRgb);
 
-            //current = new Bitmap(@"C:\Users\Rubens\Desktop\numbers.png");
+            //current = new Bitmap(@"C:\Users\Rubens\Desktop\newicon.png");
             //Detect(null, null);
 
             detectWorker.DoWork += Detect;
@@ -89,47 +105,49 @@ namespace Inspired.ClickThrough.Business
                         tasks.Clear();
                     }
 
-                    BlobCounter actions = new BlobCounter { FilterBlobs = true, MinWidth =  31, MinHeight = 31, MaxWidth =  42, MaxHeight = 42 };
-                    BlobCounter buttons = new BlobCounter { FilterBlobs = true, MinWidth = 140, MinHeight = 40, MaxWidth = 160, MaxHeight = 50 };
-                    BlobCounter numbers = new BlobCounter { FilterBlobs = true, MinWidth =   4, MinHeight = 10, MaxWidth =   9, MaxHeight = 14 };
+                    ExhaustiveTemplateMatching actionMatching = new ExhaustiveTemplateMatching(0.85f);
+                    BlobCounter actions = new BlobCounter { FilterBlobs = true, MinWidth =  30, MinHeight = 30, MaxWidth =  42, MaxHeight = 42 };
+                    BlobCounter buttons = new BlobCounter { FilterBlobs = true, MinWidth = 140, MinHeight = 40, MaxWidth = 175, MaxHeight = 50 };
                     Bitmap yellowOnly = keepYellowOnly.Apply(current);
                     actions.ProcessImage(yellowOnly);
                     buttons.ProcessImage(yellowOnly);
 
-                    //new ColorFiltering
-                    //{
-                    //    Red = new IntRange(00, 75),
-                    //    Green = new IntRange(00, 75),
-                    //    Blue = new IntRange(00, 75),
-                    //    FillColor = new RGB(Color.White),
-                    //    FillOutsideRange = true
-                    //}.ApplyInPlace(current);
-                    //numbers.ProcessImage(current);
+                    ////new ColorFiltering
+                    ////{
+                    ////    Red = new IntRange(00, 75),
+                    ////    Green = new IntRange(00, 75),
+                    ////    Blue = new IntRange(00, 75),
+                    ////    FillColor = new RGB(Color.White),
+                    ////    FillOutsideRange = true
+                    ////}.ApplyInPlace(current);
+                    ////numbers.ProcessImage(current);
 
                     //int i = 0;
 
                     ////keepYellowOnly.ApplyInPlace(current);   // output image with color filter applied
+                    ////foreach (Blob blob in buttons.GetObjectsInformation().Concat(actions.GetObjectsInformation()))
+                    ////    if (!templates.Where(t => t.Icon.Height <= blob.Rectangle.Height && t.Icon.Width <= blob.Rectangle.Width)
+                    ////                    .Any(t => exhaustive.ProcessImage(current, t.Icon, blob.Rectangle).Length == 0))
                     //foreach (Blob blob in buttons.GetObjectsInformation().Concat(actions.GetObjectsInformation()))
-                    //if (!templates.Where(t => t.Icon.Height <= blob.Rectangle.Height && t.Icon.Width <= blob.Rectangle.Width)
-                    //                .Any(t => exhaustive.ProcessImage(current, t.Icon, blob.Rectangle).Length == 0))
-                    ////foreach (Blob blob in numbers.GetObjectsInformation())
-                    //{
-                    //    using (Bitmap icon = new Bitmap(blob.Rectangle.Width, blob.Rectangle.Height))
-                    //    using (Graphics g1 = Graphics.FromImage(icon))
                     //    {
-                    //        icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
-                    //        g1.DrawImage(current, 0, 0, blob.Rectangle, GraphicsUnit.Pixel);
-                    //        icon.Save(String.Format(@"C:\Users\Rubens\Desktop\simcity\{0}.jpg", ++i), ImageFormat.Jpeg);
+                    //        using (Bitmap icon = new Bitmap(blob.Rectangle.Width, blob.Rectangle.Height))
+                    //        using (Graphics g1 = Graphics.FromImage(icon))
+                    //        {
+                    //            icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
+                    //            g1.DrawImage(current, 0, 0, blob.Rectangle, GraphicsUnit.Pixel);
+                    //            icon.Save(String.Format(@"C:\Users\Rubens\Desktop\simcity\{0}.jpg", ++i), ImageFormat.Jpeg);
+                    //        }
+                    //        g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Yellow)), blob.Rectangle);
                     //    }
-                    //    g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Yellow)), blob.Rectangle);
-                    //}
-                    //current.Save(@"C:\Users\Rubens\Desktop\newIconXXX.png");
+                    ////current.Save(@"C:\Users\Rubens\Desktop\newIconXXX.png");
+
+                    #region Identify actions and buttons
 
                     foreach (Blob blob in actions.GetObjectsInformation().Concat(
                                           buttons.GetObjectsInformation()))
                     {
                         foreach (var template in templates.Where(t => t.Icon.Height <= blob.Rectangle.Height && t.Icon.Width <= blob.Rectangle.Width))
-                        foreach (var match in exhaustive.ProcessImage(current, template.Icon, blob.Rectangle))
+                        foreach (var match in actionMatching.ProcessImage(current, template.Icon, blob.Rectangle))
                         {
                             Rectangle target = CalculateOffset(match.Rectangle, template.Offset);
                             g.FillRectangle(new SolidBrush(Color.FromArgb(128, template.Color)), match.Rectangle);
@@ -144,7 +162,7 @@ namespace Inspired.ClickThrough.Business
                                 Priority    = template.Priority,
                                 Location    = location,
                                 MouseEvents = new[] { Mouse.MouseEvent.LeftDown, Mouse.MouseEvent.LeftUp },
-                                RewardType  = (RewardType)Enum.Parse(typeof(RewardType), template.Name),
+                                Type        = template.Name,
                                 LastClick   = tracker.ContainsKey(location) ? tracker[location]: DateTime.MinValue,
                                 Cost        = template.Cost
                             };
@@ -160,6 +178,44 @@ namespace Inspired.ClickThrough.Business
                             }
                         }
                     }
+
+                    #endregion
+
+                    #region Get application counters
+
+                    int i = 0;
+                    BlobCounter counters = new BlobCounter { FilterBlobs = true, MinWidth = 60, MinHeight = 23, MaxWidth = 115, MaxHeight = 25 };
+                    ExhaustiveTemplateMatching numberMatching = new ExhaustiveTemplateMatching(0.74f);
+                    //new Sharpen().ApplyInPlace(yellowOnly);
+                    counters.ProcessImage(yellowOnly);
+                    foreach (Blob blob in counters.GetObjectsInformation())
+                    {
+                        Rectangle newR = blob.Rectangle;
+                        newR.X -= 5;
+                        newR.Width += 10;
+
+                        using (Bitmap icon = new Bitmap(newR.Width, newR.Height))
+                        using (Graphics g1 = Graphics.FromImage(icon))
+                        {
+                            icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
+                            g1.DrawImage(current, 0, 0, blob.Rectangle, GraphicsUnit.Pixel);
+                            icon.Save(String.Format(@"C:\Users\Rubens\Desktop\simcity\{0}.jpg", ++i), ImageFormat.Jpeg);
+                        }
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Lime)), blob.Rectangle);
+
+                        Dictionary<int, string> sequence = new Dictionary<int, string>();
+                        foreach (var number in numbers)
+                        foreach (var match in numberMatching.ProcessImage(current, number.Value, newR))
+                        {
+                            if (!sequence.ContainsKey(match.Rectangle.X))
+                                sequence.Add(match.Rectangle.X, number.Key);
+                        }
+
+                        //Debug.WriteLine(String.Format("{0}{1}", newR, String.Join("", sequence.OrderBy(n => n.Key).Select(n => n.Value).ToArray())));
+                    }
+
+                    #endregion
+
                     Refresh();
                 }
                 Thread.Sleep(TimeSpan.FromSeconds(5));
@@ -179,14 +235,14 @@ namespace Inspired.ClickThrough.Business
 
                     tasks.Remove(task = tasks
                         .Where(t => t.Cost <= clicks)
-                        .OrderByDescending(t => t.Priority)
+                        .OrderByDescending(t => (int)t.Priority)
                         .ThenBy(t => t.Cost)
                         .ThenBy(t => t.LastClick)
                         .First());
                 }
 
                 if (Log != null)
-                    Log(String.Format("{0:MMM dd, HH:mm:ss} {1} {2}", DateTime.Now, task.Location, task.RewardType));
+                    Log(String.Format("{0:MMM dd, HH:mm:ss} {1} {2}", DateTime.Now, task.Location, task.Type));
 
                 // keep track of last click at given location, avoiding click on same place consecutive times
                 if(!tracker.ContainsKey(task.Location))
@@ -228,8 +284,16 @@ namespace Inspired.ClickThrough.Business
             return new Point(Screen.AllScreens[this.Monitor].Bounds.X + rectangle.X, rectangle.Y - 85);
         }
 
+        public void Refresh()
+        {
+            this.Refresh(current.Clone() as Bitmap, this.Preview);
+        }
+
         private void Refresh(Image image, PictureBox pictureBox)
         {
+            if (pictureBox.FindForm().WindowState == FormWindowState.Minimized)
+                return;
+
             int sourceWidth = image.Width;
             int sourceHeight = image.Height;
 
@@ -252,11 +316,6 @@ namespace Inspired.ClickThrough.Business
                 g.DrawImage(image, 0, 0, destWidth, destHeight);
                 pictureBox.Image = b;
             }
-        }
-
-        public void Refresh()
-        {
-            this.Refresh(current.Clone() as Bitmap, this.Preview);
         }
     }
 }

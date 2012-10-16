@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AForge, Version=2.2.4.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -49,12 +52,15 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="tesseract, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>References\tesseract.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Game.cs" />
     <Compile Include="Business\Mouse.cs" />
     <Compile Include="Business\Priority.cs" />
-    <Compile Include="Business\RewardType.cs" />
     <Compile Include="Business\Task.cs" />
     <Compile Include="Business\Template.cs" />
     <Compile Include="Main.cs">
@@ -90,8 +96,21 @@
   <ItemGroup>
     <Content Include="References\AForge.dll" />
     <Content Include="References\AForge.Imaging.dll" />
+    <Content Include="References\tesseract.dll" />
+    <Content Include="Resources\SimCitySocial\0.jpg" />
+    <Content Include="Resources\SimCitySocial\1.jpg" />
+    <Content Include="Resources\SimCitySocial\2.jpg" />
+    <Content Include="Resources\SimCitySocial\3.jpg" />
+    <Content Include="Resources\SimCitySocial\4.jpg" />
+    <Content Include="Resources\SimCitySocial\5.jpg" />
+    <Content Include="Resources\SimCitySocial\6.jpg" />
+    <Content Include="Resources\SimCitySocial\7.jpg" />
+    <Content Include="Resources\SimCitySocial\8.jpg" />
+    <Content Include="Resources\SimCitySocial\9.jpg" />
     <Content Include="Resources\SimCitySocial\Fire.jpg" />
-    <Content Include="Resources\SimCitySocial\Quarentined.jpg" />
+    <Content Include="Resources\SimCitySocial\Maximize.jpg" />
+    <Content Include="Resources\SimCitySocial\Quarantine.jpg" />
+    <Content Include="Resources\SimCitySocial\Refresh.jpg" />
     <Content Include="Resources\SimCitySocial\Unfinished.jpg" />
     <Content Include="Resources\SimCitySocial\Corn.jpg" />
     <Content Include="Resources\SimCitySocial\Student1.jpg" />

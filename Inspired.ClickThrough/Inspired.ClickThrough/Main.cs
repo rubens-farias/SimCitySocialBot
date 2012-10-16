@@ -31,8 +31,25 @@ namespace Inspired.ClickThrough
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            if (game != null)
-                game.Refresh();
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                notifyIcon.Icon = this.Icon;
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(500);
+                this.Hide(); 
+            }
+            else
+            {
+                this.Show();
+                if (game != null)
+                    game.Refresh();
+            }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
         }
     }
 }
