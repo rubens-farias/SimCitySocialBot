@@ -17,9 +17,12 @@ namespace Inspired.ClickThrough.Business
 
         public static void Click(Point point, params MouseEvent[] flags)
         {
+            var current = GetCursorPosition();
             SetCursorPos(point.X, point.Y);
             foreach (var flag in flags)
                 mouse_event((int)flag, point.X, point.Y, 0, 0);
+
+            SetCursorPos(current.X, current.Y);
         }
 
         [StructLayout(LayoutKind.Sequential)]

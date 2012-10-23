@@ -51,5 +51,19 @@ namespace Inspired.ClickThrough
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
+
+        private void control_Click(object sender, EventArgs e)
+        {
+            if(this.control.Text == "Pause")
+            {
+                game.Pause();
+                this.control.Text = "Play";
+            }
+            else
+            {
+                game.Play();
+                this.control.Text = "Pause";
+            }
+        }
     }
 }

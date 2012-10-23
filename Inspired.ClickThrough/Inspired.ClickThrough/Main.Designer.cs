@@ -36,6 +36,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.log = new System.Windows.Forms.TextBox();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.control = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -77,13 +78,13 @@
             this.tableLayoutPanel2.Controls.Add(this.numericUpDown1, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.log, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.control, 1, 2);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(593, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowCount = 4;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.719298F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 92.2807F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(273, 346);
             this.tableLayoutPanel2.TabIndex = 1;
@@ -107,7 +108,7 @@
             // log
             // 
             this.log.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.log.Location = new System.Drawing.Point(44, 25);
+            this.log.Location = new System.Drawing.Point(44, 26);
             this.log.Multiline = true;
             this.log.Name = "log";
             this.log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -122,6 +123,16 @@
             this.notifyIcon.Text = "SimCitySocialBot";
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
+            // control
+            // 
+            this.control.Location = new System.Drawing.Point(44, 300);
+            this.control.Name = "control";
+            this.control.Size = new System.Drawing.Size(75, 22);
+            this.control.TabIndex = 3;
+            this.control.Text = "Pause";
+            this.control.UseVisualStyleBackColor = true;
+            this.control.Click += new System.EventHandler(this.control_Click);
             // 
             // Main
             // 
@@ -154,6 +165,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.TextBox log;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Button control;
     }
 }
 

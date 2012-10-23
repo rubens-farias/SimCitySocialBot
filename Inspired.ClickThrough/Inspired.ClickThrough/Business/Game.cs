@@ -26,6 +26,7 @@ namespace Inspired.ClickThrough.Business
         public PictureBox Preview   { get; set; }
 
         private readonly object locker = new object();
+        private readonly ManualResetEvent busy = new ManualResetEvent(false);
         private readonly BackgroundWorker detectWorker = new BackgroundWorker();
         private readonly BackgroundWorker executeWorker = new BackgroundWorker();
         private readonly BackgroundWorker addClicksWorker = new BackgroundWorker();
@@ -47,9 +48,9 @@ namespace Inspired.ClickThrough.Business
         private readonly Template[] templates = new[]
         {
             Template.Create("Close"    , 0, Color.Blue   , Priority.Highest, true ),
-            Template.Create("Refresh"  , 0, Color.Blue   , Priority.Highest, true ),
+            //Template.Create("Refresh"  , 0, Color.Blue   , Priority.Highest, true ),
             Template.Create("Maximize" , 0, Color.Blue   , Priority.Highest, true ),
-            Template.Create("Ok"       , 0, Color.Blue   , Priority.High   , false),
+            //Template.Create("Ok"       , 0, Color.Blue   , Priority.High   , false),
             Template.Create("Student1" , 1, Color.Yellow , Priority.High   , true ),
             Template.Create("Student2" , 1, Color.Yellow , Priority.High   , true ),
             Template.Create("BioHazard", 1, Color.Red    , Priority.Medium , true ),
@@ -71,8 +72,8 @@ namespace Inspired.ClickThrough.Business
             { "9", (Bitmap) Bitmap.FromFile(@"..\..\Resources\SimCitySocial\9.jpg") }
         };
 
-        public delegate void LogHandler(string message);
         public event LogHandler Log;
+        public delegate void LogHandler(string message);
         
         public void Start()
         {
@@ -90,6 +91,8 @@ namespace Inspired.ClickThrough.Business
             detectWorker.RunWorkerAsync();
             executeWorker.RunWorkerAsync();
             addClicksWorker.RunWorkerAsync();
+
+            Play();
         }
 
         private void Detect(object sender, DoWorkEventArgs e)
@@ -98,6 +101,7 @@ namespace Inspired.ClickThrough.Business
             {
                 using (Graphics g = Graphics.FromImage(current))
                 {
+                    Mouse.Click(new Point(bounds.Location.X + 10, bounds.Location.Y + 10), new[] { Mouse.MouseEvent.LeftDown, Mouse.MouseEvent.LeftUp });
                     g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
 
                     lock (locker)
@@ -185,33 +189,34 @@ namespace Inspired.ClickThrough.Business
 
                     int i = 0;
                     BlobCounter counters = new BlobCounter { FilterBlobs = true, MinWidth = 60, MinHeight = 23, MaxWidth = 115, MaxHeight = 25 };
-                    ExhaustiveTemplateMatching numberMatching = new ExhaustiveTemplateMatching(0.74f);
+                    ExhaustiveTemplateMatching numberMatching = new ExhaustiveTemplateMatching(0.63f);
                     //new Sharpen().ApplyInPlace(yellowOnly);
                     counters.ProcessImage(yellowOnly);
+                    Debug.WriteLine(new string('-', 20));
                     foreach (Blob blob in counters.GetObjectsInformation())
                     {
-                        Rectangle newR = blob.Rectangle;
-                        newR.X -= 5;
-                        newR.Width += 10;
+                        Rectangle adjusted = blob.Rectangle;
+                        adjusted.Width += 10;
+                        adjusted.X -= 5;
 
-                        using (Bitmap icon = new Bitmap(newR.Width, newR.Height))
+                        using (Bitmap icon = new Bitmap(adjusted.Width, adjusted.Height))
                         using (Graphics g1 = Graphics.FromImage(icon))
                         {
                             icon.SetResolution(current.HorizontalResolution, current.VerticalResolution);
-                            g1.DrawImage(current, 0, 0, blob.Rectangle, GraphicsUnit.Pixel);
-                            icon.Save(String.Format(@"C:\Users\Rubens\Desktop\simcity\{0}.jpg", ++i), ImageFormat.Jpeg);
+                            g1.DrawImage(current, 0, 0, adjusted, GraphicsUnit.Pixel);
+                            //icon.Save(String.Format(@"C:\Users\Rubens\Desktop\simcity\{0}.jpg", ++i), ImageFormat.Jpeg);
                         }
                         g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Lime)), blob.Rectangle);
 
                         Dictionary<int, string> sequence = new Dictionary<int, string>();
                         foreach (var number in numbers)
-                        foreach (var match in numberMatching.ProcessImage(current, number.Value, newR))
+                        foreach (var match in numberMatching.ProcessImage(current, number.Value, adjusted))
                         {
                             if (!sequence.ContainsKey(match.Rectangle.X))
                                 sequence.Add(match.Rectangle.X, number.Key);
                         }
 
-                        //Debug.WriteLine(String.Format("{0}{1}", newR, String.Join("", sequence.OrderBy(n => n.Key).Select(n => n.Value).ToArray())));
+                        Debug.WriteLine(String.Format("{0}{1}", adjusted, String.Join("", sequence.OrderBy(n => n.Key).Select(n => n.Value).ToArray())));
                     }
 
                     #endregion
@@ -240,6 +245,8 @@ namespace Inspired.ClickThrough.Business
                         .ThenBy(t => t.LastClick)
                         .First());
                 }
+
+                busy.WaitOne();
 
                 if (Log != null)
                     Log(String.Format("{0:MMM dd, HH:mm:ss} {1} {2}", DateTime.Now, task.Location, task.Type));
@@ -281,7 +288,17 @@ namespace Inspired.ClickThrough.Business
 
         private Point TranslateScreenCoordinates(Rectangle rectangle)
         {
-            return new Point(Screen.AllScreens[this.Monitor].Bounds.X + rectangle.X, rectangle.Y - 85);
+            return new Point(bounds.X + rectangle.X, bounds.Y + rectangle.Y);
+        }
+
+        public void Play()
+        {
+            busy.Set();
+        }
+
+        public void Pause()
+        {
+            busy.Reset();
         }
 
         public void Refresh()
