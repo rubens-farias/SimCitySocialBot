@@ -17,12 +17,19 @@ namespace Inspired.ClickThrough
         {
             game = new Game
             {
-                Monitor = 1,
-                Preview = this.pictureBox,
-                Spawn = TimeSpan.FromMinutes(3),
+                //Clicks   = 0,
+                Monitor  = 0,
+                Preview  = this.pictureBox,
+                Spawn    = TimeSpan.FromMinutes(3),
                 Interval = TimeSpan.FromSeconds(5),
             };
-            game.Log += message => {
+            game.ClicksChanged += number =>
+            {
+                if (this.clicks.InvokeRequired)
+                    this.Invoke(new MethodInvoker(delegate { this.clicks.Value = number; }));
+            };
+            game.Log += message =>
+            {
                 if (this.log.InvokeRequired)
                     this.Invoke(new MethodInvoker(delegate { this.log.Text = message + Environment.NewLine + this.log.Text; }));
             };
@@ -64,6 +71,11 @@ namespace Inspired.ClickThrough
                 game.Play();
                 this.control.Text = "Pause";
             }
+        }
+
+        private void clicks_ValueChanged(object sender, EventArgs e)
+        {
+            game.Clicks = (int)clicks.Value;
         }
     }
 }

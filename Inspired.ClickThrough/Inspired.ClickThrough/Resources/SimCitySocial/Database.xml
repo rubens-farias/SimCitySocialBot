@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Database>
+  <Collectibles>
+    <Item Name="Architectural Pizzazz" Maximum="8" From="Attractions, Train Station" />
+    <Item Name="BBQ" Maximum="8" From="Houses" />
+    <Item Name="Big Idea" Maximum="8" From="Jobs (Houses)" />
+    <Item Name="Bliss" Maximum="5" From="Neighbor" />
+    <Item Name="Bushel of Food" Maximum="12" From="Farms" />
+    <Item Name="Business Card" Maximum="20" From="Businesses, Train Station" />
+    <Item Name="Business Savvy" Maximum="8" From="Businesses" />
+    <Item Name="Cash Register" Maximum="12" From="Businesses" />
+    <Item Name="Consultant" Maximum="10" From="Businesses" />
+    <Item Name="Community" Maximum="16" From="Houses" />
+    <Item Name="Creativity" Maximum="10" From="Jobs (Houses)" />
+    <Item Name="Efficiency" Maximum="10" From="Jobs (Houses)" />
+    <Item Name="Elbow Grease" Maximum="8" From="Factories" />
+    <Item Name="Entrepreneurship" Maximum="10" From="Jobs (Houses)" />
+    <Item Name="Expression" Maximum="8" From="Jobs (Houses)" />
+    <Item Name="Farm Hand" Maximum="10" From="Farms" />
+    <Item Name="Flair" Maximum="12" From="Jobs (Houses)" />
+    <Item Name="Foam Finger" Maximum="12" From="Attractions, Train Station" />
+    <Item Name="Fury" Maximum="15" From="Neighbor" />
+    <Item Name="Goodwill" Maximum="15" From="Neighbor" />
+    <Item Name="Groundskeeper" Maximum="8" From="Houses" />
+    <Item Name="Hard Hat" Maximum="20" From="Factories" />
+    <Item Name="Harmony" Maximum="10" From="Neighbor" />
+    <Item Name="Hayseed" Maximum="8" From="Farms" />
+    <Item Name="Holiday Snapshot" Maximum="10" From="Attractions, Train Station" />
+    <Item Name="Innovation" Maximum="12" From="Jobs (Houses)" />
+    <Item Name="Investment" Maximum="10" From="Businesses" />
+    <Item Name="Kaizen" Maximum="8" From="Jobs (Houses)" />
+    <Item Name="Llama Manure" Maximum="20" From="Farms" />
+    <Item Name="Lunchbox" Maximum="10" From="Factories" />
+    <Item Name="Land Permit" Maximum="80" From="Ask Friend" />
+    <Item Name="Medal of Bravery" Maximum="10" From="Fire Station" />
+    <Item Name="Plow" Maximum="10" From="Farms" />
+    <Item Name="Police Badge" Maximum="10" From="Police Station" />
+    <Item Name="Punchcard" Maximum="12" From="Factories" />
+    <Item Name="Rage" Maximum="10" From="Neighbor" />
+    <Item Name="Robot Worker" Maximum="10" From="Factories" />
+    <Item Name="Safety Award" Maximum="5" From="Factories" />
+    <Item Name="Salt of the Earth" Maximum="5" From="Farms" />
+    <Item Name="Souvenir" Maximum="8" From="Attractions, Train Station" />
+    <Item Name="Teamwork" Maximum="15" From="Neighbor" />
+    <Item Name="Ticket Stub" Maximum="20" From="Attractions, Train Station" />
+    <Item Name="Tour Guide" Maximum="10" From="Attractions" />
+    <Item Name="TPS Report" Maximum="5" From="Businesses" />
+    <Item Name="Trust" Maximum="10" From="Neighbor" />
+    <Item Name="Unity" Maximum="5" From="Neighbor" />
+    <Item Name="Vision" Maximum="12" From="Jobs (Houses)" />
+    <Item Name="Wrath" Maximum="5" From="Neighbor" />
+    <Item Name="X-ray" Maximum="10" From="Hospital" />
+  </Collectibles>
+  <Structures>
+    <Structure type="Business" Name="Alchemist" Width="2" Height="2" Wait="12.5" Pollution="None">
+      <Level Number="0">
+        <Payout Type="Coin" Value="1620" />
+        <Requires>
+          <Item Name="Coin" Value="45000"/>
+          <Item Name="Population" Value="123"/>
+        </Requires>
+      </Level>
+      <Level Number="1">
+        <Payout Type="Coin" Value="1944" />
+        <Requires>
+          <Item Name="Architectural Pizzazz" Value="2"/>
+          <Upgrade Clicks="12" Materials="380" />
+        </Requires>
+      </Level>
+      <Level Number="2">
+        <Payout Type="Coin" Value="2106" />
+      </Level>
+      <Level Number="3">
+        <Payout Type="Coin" Value="2430" />
+      </Level>
+    </Structure>
+  </Structures>
+</Database>

@@ -43,6 +43,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>References\AForge.Imaging.dll</HintPath>
     </Reference>
+    <Reference Include="AForge.Math, Version=2.2.4.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>References\AForge.Math.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -96,32 +100,55 @@
   <ItemGroup>
     <Content Include="References\AForge.dll" />
     <Content Include="References\AForge.Imaging.dll" />
+    <Content Include="References\AForge.Math.dll" />
     <Content Include="References\tesseract.dll" />
-    <Content Include="Resources\SimCitySocial\0.jpg" />
-    <Content Include="Resources\SimCitySocial\1.jpg" />
-    <Content Include="Resources\SimCitySocial\2.jpg" />
-    <Content Include="Resources\SimCitySocial\3.jpg" />
-    <Content Include="Resources\SimCitySocial\4.jpg" />
-    <Content Include="Resources\SimCitySocial\5.jpg" />
-    <Content Include="Resources\SimCitySocial\6.jpg" />
-    <Content Include="Resources\SimCitySocial\7.jpg" />
-    <Content Include="Resources\SimCitySocial\8.jpg" />
-    <Content Include="Resources\SimCitySocial\9.jpg" />
-    <Content Include="Resources\SimCitySocial\Fire.jpg" />
-    <Content Include="Resources\SimCitySocial\Maximize.jpg" />
-    <Content Include="Resources\SimCitySocial\Quarantine.jpg" />
-    <Content Include="Resources\SimCitySocial\Refresh.jpg" />
-    <Content Include="Resources\SimCitySocial\Unfinished.jpg" />
-    <Content Include="Resources\SimCitySocial\Corn.jpg" />
+    <Content Include="Resources\SimCitySocial\Artichokes1.jpg" />
+    <Content Include="Resources\SimCitySocial\Artichokes2.jpg" />
+    <Content Include="Resources\SimCitySocial\Burned.jpg" />
+    <Content Include="Resources\SimCitySocial\Chicken1.jpg" />
+    <Content Include="Resources\SimCitySocial\Chicken2.jpg" />
+    <Content Include="Resources\SimCitySocial\Close2.jpg" />
+    <Content Include="Resources\SimCitySocial\Close3.jpg" />
+    <Content Include="Resources\SimCitySocial\Corn2.jpg" />
+    <Content Include="Resources\SimCitySocial\Cow1.jpg" />
+    <Content Include="Resources\SimCitySocial\Cow2.jpg" />
+    <Content Include="Resources\SimCitySocial\Diamond.jpg" />
+    <Content Include="Resources\SimCitySocial\Directory.jpg" />
+    <Content Include="Resources\SimCitySocial\Dismiss.jpg" />
+    <Content Include="Resources\SimCitySocial\Eggplant1.jpg" />
+    <Content Include="Resources\SimCitySocial\Eggs2.jpg" />
+    <Content Include="Resources\SimCitySocial\Abandoned.jpg" />
+    <Content Include="Resources\SimCitySocial\Fleece1.jpg" />
+    <Content Include="Resources\SimCitySocial\Fleece2.jpg" />
+    <Content Include="Resources\SimCitySocial\Incomplete.jpg" />
+    <Content Include="Resources\SimCitySocial\Milk2.jpg" />
+    <Content Include="Resources\SimCitySocial\NoRoad.jpg" />
+    <Content Include="Resources\SimCitySocial\SoyBeans1.jpg" />
+    <Content Include="Resources\SimCitySocial\Student2.jpg" />
     <Content Include="Resources\SimCitySocial\Student1.jpg" />
+    <Content Include="Resources\SimCitySocial\Accept.jpg" />
+    <Content Include="Resources\SimCitySocial\Carrot1.jpg" />
+    <Content Include="Resources\SimCitySocial\Database.xml" />
+    <Content Include="Resources\SimCitySocial\Eggs1.jpg" />
+    <Content Include="Resources\SimCitySocial\Help.jpg" />
+    <Content Include="Resources\SimCitySocial\Maximize.jpg" />
+    <Content Include="Resources\SimCitySocial\Quarantined.jpg" />
+    <Content Include="Resources\SimCitySocial\Refresh.jpg" />
+    <Content Include="Resources\SimCitySocial\SendBack.jpg" />
+    <Content Include="Resources\SimCitySocial\Tomatoes1.jpg" />
+    <Content Include="Resources\SimCitySocial\Unfinished.jpg" />
+    <Content Include="Resources\SimCitySocial\Corn1.jpg" />
     <Content Include="Resources\SimCitySocial\Ok.jpg" />
     <Content Include="Resources\SimCitySocial\BioHazard.jpg" />
     <Content Include="Resources\SimCitySocial\Bolt.jpg" />
-    <Content Include="Resources\SimCitySocial\Close.jpg" />
+    <Content Include="Resources\SimCitySocial\Close1.jpg" />
     <Content Include="Resources\SimCitySocial\Coin.jpg" />
     <Content Include="Resources\SimCitySocial\Material.jpg" />
-    <Content Include="Resources\SimCitySocial\Student2.jpg" />
+    <Content Include="Resources\SimCitySocial\Vaporized.jpg" />
+    <Content Include="Resources\SimCitySocial\VisitBack.jpg" />
     <Content Include="Resources\SimCitySocial\Waiting.jpg" />
+    <Content Include="Resources\SimCitySocial\Wool1.jpg" />
+    <Content Include="Resources\SimCitySocial\Wool2.jpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

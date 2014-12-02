@@ -10,6 +10,9 @@ namespace Inspired.ClickThrough.Business
         public string Type                      { get; set; }
         public Point Location                   { get; set; }
         public DateTime LastClick               { get; set; }
+        public TimeSpan Delay                   { get; set; }
+        public bool Refresh                     { get; set; }
+        public float Similarity                 { get; set; }
         public Mouse.MouseEvent[] MouseEvents   { get; set; }
     }
 }
